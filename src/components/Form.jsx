@@ -40,7 +40,7 @@ const Form = () => {
                 email: email,
                 tel: telefono,
                 profession: profesion,
-                Img: Img
+                Img: Img,
 
             })
             setElementList(
