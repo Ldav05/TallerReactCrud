@@ -5,11 +5,18 @@ import { async } from '@firebase/util'
 
 
 const Form = () => {
-    const [element, setElement] = useState('')
-    const [description, setDescription] = useState('')
+    const [Element, setElement] = useState('')
+    const [apellido, setApellido] = useState('')
+    const [documento, setDocumento] = useState('')
+    const [email, setEmail] = useState('')
+    const [telefono, setTelefono] = useState('')
+    const [profesion, setProfesion] = useState('')
+    const [sexo, setSexo] = useState('')
+
     const [id, setId] = useState(0)
-    const [elementList, setElementList] = useState([])
+    const [ElementList, setElementList] = useState([])
     const [editing, setEditing] = useState(false)
+    const Image = ('https://picsum.photos/50');
 
     useEffect(()=>{
         const getData = async () =>{
@@ -28,18 +35,35 @@ const Form = () => {
         e.preventDefault()
         try {
             const data = await addDoc(collection(db, 'Elements'),{
-                elementName: element,
-                descriptionName: description
+                name: Element,
+                fullName: apellido,
+                sex: sexo,
+                documento: documento,
+                email: email,
+                tel: telefono,
+                profession: profesion
+
             })
             setElementList(
-                [...elementList, {
-                    elementName: element,
-                    descriptionName: description,
-                    id: data.id,
+                [...ElementList, {
+                    name: Element,
+                    fullName: apellido,
+                    sex: sexo,
+                    documento: documento,
+                    email: email,
+                    tel: telefono,
+                    profession: profesion,
+                    id: data.id
                 }]
             )
            setElement('')
-           setDescription('')
+           setApellido('')
+           setSexo('')
+           setDocumento('')
+           setEmail('')
+           setTelefono('')
+           setProfesion('')
+           
         } catch (error) {
             console.log(error)
         }
@@ -54,8 +78,14 @@ const Form = () => {
     }
 
     const Edit = item =>{
-        setElement(item.elementName)
-        setDescription(item.descriptionName)
+        
+        setElement(item.name)
+        setApellido(item.fullName)
+        setSexo(item.sex)
+        setDocumento(item.documento)
+        setEmail(item.email)
+        setTelefono(item.tel)
+        setProfesion(item.profession)
         setId(item.id)
         setEditing(true)
     }
@@ -65,17 +95,34 @@ const Form = () => {
         try {
             const docRef = doc(db, 'Elements', id);
             await updateDoc(docRef,{
-                elementName:element,
-                descriptionName: description,
+                    name: Element,
+                    fullName: apellido,
+                    sex: sexo,
+                    documento: documento,
+                    email: email,
+                    tel: telefono,
+                    profession: profesion
             })
 
-            const newArray = elementList.map(
-                item => item.id === id ? {elementName:element, descriptionName:description, id:id}: item
+            const newArray = ElementList.map(
+                item => item.id === id ? {name: Element,
+                    fullName: apellido,
+                    sex: sexo,
+                    documento: documento,
+                    email: email,
+                    tel: telefono,
+                    profession: profesion, id:id
+                }: item
             )
 
             setElementList(newArray)
             setElement('')
-            setDescription('')
+            setApellido('')
+            setSexo('')
+            setDocumento('')
+            setEmail('')
+            setTelefono('')
+            setProfesion('')
             setId('')
             setEditing(false)
 
@@ -86,8 +133,13 @@ const Form = () => {
 
     const Cancel = () =>{
         setEditing(false)
-        setElement('') 
-        setDescription('')
+        setElement('')
+        setApellido('')
+        setSexo('')
+        setDocumento('')
+        setEmail('')
+        setTelefono('')
+        setProfesion('')
         setId('')
      }
 
@@ -100,9 +152,9 @@ const Form = () => {
                 <h4 className="text-center">Listado</h4>
                 <ul className="list-group"> 
                    {
-                        elementList.map(item => (
+                        ElementList.map(item => (
                             <li className="list-group-item" key={item.id}>
-                                <span className="lead">{item.elementName}-{item.descriptionName}</span>
+                                <span className="lead">Nombre: {item.name} - Apellido: {item.fullName} <br></br>Sexo: {item.sex} - Documento: {item.documento} <br></br> Correo: {item.email} - Teléfono: {item.tel} <br></br>Profesión: {item.profession}<br></br><br></br></span>
                                 <button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>Delete(item.id)}>Eliminar</button>
                                 <button className="btn btn-warning btn-sm fload-end" onClick={()=>Edit(item)}>Editar</button>
                             </li>
@@ -112,10 +164,16 @@ const Form = () => {
                 </ul>
             </div>
             <div className="col-4">
-                <h4 className="text-center">{ editing ? 'Editar Elemento': 'Agregar Elemento'}</h4>
+                <h4 className="text-center">{ editing ? 'Editar Aspirante': 'Crear Aspirante'}</h4>
                 <form onSubmit={editing ? editElement : saveElements}>
-                    <input type="text" className="form-control mb-2" placeholder='Ingresar elemento' value = {element} onChange={(e)=>setElement(e.target.value)} />
-                    <input type="text" className="form-control mb-2" placeholder='Ingresar Descripción'value = {description} onChange={(e)=>setDescription(e.target.value)}/>
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Nombre' value = {Element} onChange={(e)=>setElement(e.target.value)} />
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Apellido'value = {apellido} onChange={(e)=>setApellido(e.target.value)}/>
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Sexo' value = {sexo} onChange={(e)=>setSexo(e.target.value)} />
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Documento'value = {documento} onChange={(e)=>setDocumento(e.target.value)}/>
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Email' value = {email} onChange={(e)=>setEmail(e.target.value)} />
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Teléfono'value = {telefono} onChange={(e)=>setTelefono(e.target.value)}/>
+                    <input type="text" className="form-control mb-2" placeholder='Ingresar Profesión' value = {profesion} onChange={(e)=>setProfesion(e.target.value)} />
+            
                     {
                         editing
                          ? 
