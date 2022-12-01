@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import {db} from '../firebase'
-import {collection, doc, addDoc, onSnapshot} from 'firebase/firestore'
+import {collection, doc, addDoc, onSnapshot, deleteDoc} from 'firebase/firestore'
+import { editableInputTypes } from '@testing-library/user-event/dist/utils'
+import { async } from '@firebase/util'
 
 const Form = () => {
     const [element, setElement] = useState('')
@@ -39,6 +41,19 @@ const Form = () => {
             console.log(error)
         }
     }
+
+    const Delete = async id =>{
+        try {
+           await deleteDoc(doc(db,'Elements', id)) 
+        } catch (error) {
+           console.log(error) 
+        }
+    }
+
+    const Edit = item =>{
+
+    }
+
   return (
     <div className='container mt-5'>
         <h1 className='text-cent'>TALLER CRUD</h1>
@@ -49,7 +64,11 @@ const Form = () => {
                 <ul className="list-group"> 
                    {
                         elementList.map(item => (
-                            <li className="list-group-item" key={item.id}>{item.elementName}-{item.descriptionName}</li>
+                            <li className="list-group-item" key={item.id}>
+                                <span className="lead">{item.elementName}-{item.descriptionName}</span>
+                                <button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>Delete(item.id)}>Eliminar</button>
+                                <button className="btn btn-warning btn-sm fload-end" onClick={()=>editableInputTypes(item)}>Editar</button>
+                            </li>
                          ))
                    }
                     
