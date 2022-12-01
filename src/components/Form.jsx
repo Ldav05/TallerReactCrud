@@ -39,7 +39,8 @@ const Form = () => {
                 documento: documento,
                 email: email,
                 tel: telefono,
-                profession: profesion
+                profession: profesion,
+                Img: Img
 
             })
             setElementList(
